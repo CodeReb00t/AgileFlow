@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import ProjectHeader from "@/app/projects/ProjectHeader";
-import BoardView from "@/app/projects/BoardView";
-import ListView from "@/app/projects/ListView";
-import TimeLine from "@/app/projects/TimeLineView";
-import TableView from "@/app/projects/TableView";
-import ModalNewTask from "@/components/ModalNewTask";
+import ProjectHeader from "@/src/app/projects/ProjectHeader";
+import BoardView from "@/src/app/projects/BoardView";
+import ListView from "@/src/app/projects/ListView";
+import TimeLine from "@/src/app/projects/TimeLineView";
+import TableView from "@/src/app/projects/TableView";
+import ModalNewTask from "@/src/components/ModalNewTask";
 type Props = {
   params: Promise<{ id: string }>;
 };

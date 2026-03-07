@@ -1,9 +1,9 @@
 "use client";
 
-import { useGetUsersQuery } from "@/state/api";
+import { useGetUsersQuery } from "@/src/state/api";
 import React from "react";
 import { useAppSelector } from "../redux";
-import Header from "@/components/Header";
+import Header from "@/src/components/Header";
 import {
   DataGrid,
   GridColDef,
@@ -12,7 +12,7 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
 import Image from "next/image";
-import { dataGridClassNames, dataGridSxStyles } from "@/lib/utils";
+import { dataGridClassNames, dataGridSxStyles } from "@/src/lib/utils";
 import { Grid } from "lucide-react";
 import { GridToolbar } from "@mui/x-data-grid/internals";
 const columns: GridColDef[] = [
@@ -26,7 +26,7 @@ const columns: GridColDef[] = [
       <div className="flex h-full items-center justify-center">
         <div className="h-9 w-9">
           <Image
-            src={`https://pm-s3-public-images.s3.ap-south-1.amazonaws.com/${params.value}`}
+            src={`/images/${params.value}`}
             alt={params.row.username}
             width={100}
             height={50}

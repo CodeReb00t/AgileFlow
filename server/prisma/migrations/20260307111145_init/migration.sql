@@ -1,7 +1,6 @@
 -- CreateTable
 CREATE TABLE "User" (
     "userId" SERIAL NOT NULL,
-    "cognitoId" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "profilePictureUrl" TEXT,
     "teamId" INTEGER,
@@ -86,9 +85,6 @@ CREATE TABLE "Comment" (
 
     CONSTRAINT "Comment_pkey" PRIMARY KEY ("id")
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_cognitoId_key" ON "User"("cognitoId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");

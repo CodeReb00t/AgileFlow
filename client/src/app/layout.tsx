@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
+//@ts-ignore
 import "./globals.css";
-import DashboardWrapper from "@/app/dashboardWrapper";
+import DashboardWrapper from "@/src/app/dashboardWrapper";
 import React from "react";
-
 
 export const metadata: Metadata = {
   title: "Shedly",
@@ -16,12 +16,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`antialiased`}
-      >
-        <DashboardWrapper>
-            {children}
-        </DashboardWrapper>
+      <body className={`antialiased`}>
+        <DashboardWrapper>{children}</DashboardWrapper>
       </body>
     </html>
   );

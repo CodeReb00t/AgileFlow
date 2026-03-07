@@ -1,9 +1,9 @@
 "use client";
 
-import { useGetTeamsQuery } from "@/state/api";
+import { useGetTeamsQuery } from "@/src/state/api";
 import React from "react";
 import { useAppSelector } from "../redux";
-import Header from "@/components/Header";
+import Header from "@/src/components/Header";
 import {
   DataGrid,
   GridColDef,
@@ -12,7 +12,7 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
 import Image from "next/image";
-import { dataGridClassNames, dataGridSxStyles } from "@/lib/utils";
+import { dataGridClassNames, dataGridSxStyles } from "@/src/lib/utils";
 import { Grid } from "lucide-react";
 import { GridToolbar } from "@mui/x-data-grid/internals";
 const columns: GridColDef[] = [

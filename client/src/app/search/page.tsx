@@ -1,10 +1,10 @@
 "use client";
 
-import Header from "@/components/Header";
-import ProjectCard from "@/components/ProjectCard";
-import TaskCard from "@/components/TaskCard";
-import UserCard from "@/components/UserCard";
-import { useSearchQuery } from "@/state/api";
+import Header from "@/src/components/Header";
+import ProjectCard from "@/src/components/ProjectCard";
+import TaskCard from "@/src/components/TaskCard";
+import UserCard from "@/src/components/UserCard";
+import { useSearchQuery } from "@/src/state/api";
 import { debounce } from "lodash";
 import React, { useEffect, useState } from "react";
 
@@ -22,7 +22,7 @@ const Search = () => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setSearchTerm(event.target.value);
     },
-    500
+    500,
   );
 
   useEffect(() => {

@@ -1,9 +1,9 @@
 import React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useAppSelector } from "@/app/redux";
-import { useGetTasksQuery } from "@/state/api";
-import Header from "@/components/Header";
-import { dataGridClassNames, dataGridSxStyles } from "@/lib/utils";
+import { useAppSelector } from "@/src/app/redux";
+import { useGetTasksQuery } from "@/src/state/api";
+import Header from "@/src/components/Header";
+import { dataGridClassNames, dataGridSxStyles } from "@/src/lib/utils";
 type Props = {
   id: string;
   setIsModalNewTaskOpen: (isOpen: boolean) => void;

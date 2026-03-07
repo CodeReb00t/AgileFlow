@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "@/src/components/Header";
 import React from "react";
 import { text } from "stream/consumers";
 

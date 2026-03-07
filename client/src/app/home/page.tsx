@@ -6,11 +6,11 @@ import {
   Task,
   useGetProjectsQuery,
   useGetTasksQuery,
-} from "@/state/api";
+} from "@/src/state/api";
 import React from "react";
 import { useAppSelector } from "../redux";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import Header from "@/components/Header";
+import Header from "@/src/components/Header";
 import {
   Bar,
   BarChart,
@@ -24,7 +24,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { dataGridClassNames, dataGridSxStyles } from "@/lib/utils";
+import { dataGridClassNames, dataGridSxStyles } from "@/src/lib/utils";
 
 const taskColumns: GridColDef[] = [
   { field: "title", headerName: "Title", width: 200 },
@@ -55,7 +55,7 @@ const HomePage = () => {
       acc[priority as Priority] = (acc[priority as Priority] || 0) + 1;
       return acc;
     },
-    {}
+    {},
   );
 
   const taskDistribution = Object.keys(priorityCount).map((key) => ({
@@ -69,7 +69,7 @@ const HomePage = () => {
       acc[status] = (acc[status] || 0) + 1;
       return acc;
     },
-    {}
+    {},
   );
 
   const projectStatus = Object.keys(statusCount).map((key) => ({

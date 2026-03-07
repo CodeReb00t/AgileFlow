@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { get } from "lodash";
 export interface Project {
   id: number;
   name: string;
@@ -12,7 +11,6 @@ export interface User {
   username: string;
   email: string;
   profilePictureUrl?: string;
-  cognitoId?: string;
   teamId?: number;
 }
 export interface Attachment {

@@ -1,4 +1,4 @@
-import { Project } from "@/state/api";
+import { Project } from "@/src/state/api";
 import React from "react";
 
 type Props = {
