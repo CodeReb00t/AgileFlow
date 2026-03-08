@@ -51,6 +51,34 @@ async function main() {
       console.error(`Error seeding data for ${modelName}:`, error);
     }
   }
+
+  // Reset auto-increment sequences to avoid unique constraint errors
+  // after seeding with explicit IDs
+  await prisma.$executeRawUnsafe(
+    `SELECT setval('"Task_id_seq"', (SELECT COALESCE(MAX(id), 0) FROM "Task") + 1, false)`,
+  );
+  await prisma.$executeRawUnsafe(
+    `SELECT setval('"Project_id_seq"', (SELECT COALESCE(MAX(id), 0) FROM "Project") + 1, false)`,
+  );
+  await prisma.$executeRawUnsafe(
+    `SELECT setval('"User_userId_seq"', (SELECT COALESCE(MAX("userId"), 0) FROM "User") + 1, false)`,
+  );
+  await prisma.$executeRawUnsafe(
+    `SELECT setval('"Team_id_seq"', (SELECT COALESCE(MAX(id), 0) FROM "Team") + 1, false)`,
+  );
+  await prisma.$executeRawUnsafe(
+    `SELECT setval('"ProjectTeam_id_seq"', (SELECT COALESCE(MAX(id), 0) FROM "ProjectTeam") + 1, false)`,
+  );
+  await prisma.$executeRawUnsafe(
+    `SELECT setval('"TaskAssignment_id_seq"', (SELECT COALESCE(MAX(id), 0) FROM "TaskAssignment") + 1, false)`,
+  );
+  await prisma.$executeRawUnsafe(
+    `SELECT setval('"Attachment_id_seq"', (SELECT COALESCE(MAX(id), 0) FROM "Attachment") + 1, false)`,
+  );
+  await prisma.$executeRawUnsafe(
+    `SELECT setval('"Comment_id_seq"', (SELECT COALESCE(MAX(id), 0) FROM "Comment") + 1, false)`,
+  );
+  console.log("Auto-increment sequences reset successfully!");
 }
 
 main()

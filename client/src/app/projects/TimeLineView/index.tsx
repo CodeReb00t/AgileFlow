@@ -3,6 +3,7 @@ import "gantt-task-react/dist/index.css";
 import { useAppSelector } from "@/src/app/redux";
 import { useGetTasksQuery } from "@/src/state/api";
 import { DisplayOption, Gantt, ViewMode } from "gantt-task-react";
+import { Plus } from "lucide-react";
 
 type Props = {
   id: string;
@@ -10,6 +11,7 @@ type Props = {
 };
 
 type TaskTypeItems = "task" | "milestone" | "project";
+
 const TimeLine = ({ id, setIsModalNewTaskOpen }: Props) => {
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
   const {
@@ -21,6 +23,7 @@ const TimeLine = ({ id, setIsModalNewTaskOpen }: Props) => {
     viewMode: ViewMode.Month,
     locale: "en-US",
   });
+
   const ganttTasks = useMemo(() => {
     return (
       tasks?.map((task) => ({
@@ -43,17 +46,29 @@ const TimeLine = ({ id, setIsModalNewTaskOpen }: Props) => {
       viewMode: event.target.value as ViewMode,
     }));
   };
-  if (isLoading) return <div>Loading ...</div>;
-  if (error) return <div>An error occurred while fetching tasks</div>;
+
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+      </div>
+    );
+  if (error)
+    return (
+      <div className="flex items-center justify-center py-20 text-red-500">
+        An error occurred while fetching tasks
+      </div>
+    );
+
   return (
-    <div className="px-4 xl:px-6 ">
+    <div className="px-4 xl:px-6">
       <div className="flex flex-wrap items-center justify-between gap-2 py-5">
-        <h1 className="me-2 text-lg font-bold dark:text-white">
+        <h1 className="text-lg font-bold text-gray-900 dark:text-white">
           Project Tasks Timeline
         </h1>
-        <div className="relative inline-block w-64">
+        <div className="flex items-center gap-3">
           <select
-            className="focus:shadow-outline block w-full appearance-none rounded border border-gray-400 bg-white px-4 py-2 pr-8 leading-tight shadow hover:border-gray-500 focus:outline-none dark:border-dark-secondary dark:bg-dark-secondary dark:text-white"
+            className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-stroke-dark dark:bg-dark-secondary dark:text-white transition-colors"
             value={displayOptions.viewMode}
             onChange={handleViewModeChange}
           >
@@ -63,22 +78,23 @@ const TimeLine = ({ id, setIsModalNewTaskOpen }: Props) => {
           </select>
         </div>
       </div>
-      <div className="overflow-hidden rounded-md bg-white shadow dark:bg-dark-secondary dark:text-white">
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-stroke-dark dark:bg-dark-secondary dark:text-white">
         <div className="timeline">
           <Gantt
             tasks={ganttTasks}
             {...displayOptions}
             columnWidth={displayOptions.viewMode === ViewMode.Month ? 150 : 100}
             listCellWidth="100px"
-            barBackgroundColor={isDarkMode ? "#101214" : "#aeb8c2"}
-            barBackgroundSelectedColor={isDarkMode ? "#000" : "#9ba1a6"}
+            barBackgroundColor={isDarkMode ? "#3b82f6" : "#93c5fd"}
+            barBackgroundSelectedColor={isDarkMode ? "#2563eb" : "#60a5fa"}
           />
         </div>
-        <div className="px-4 pb-5 pt-1">
+        <div className="border-t border-gray-200 dark:border-stroke-dark px-4 py-4">
           <button
-            className="flex items-center rounded bg-blue-primary px-3 py-2 text-white bg-blue-600"
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
             onClick={() => setIsModalNewTaskOpen(true)}
           >
+            <Plus className="h-4 w-4" />
             Add New Task
           </button>
         </div>

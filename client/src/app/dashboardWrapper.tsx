@@ -17,18 +17,18 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     } else {
       document.documentElement.classList.remove("dark");
     }
-  });
+  }, [isDarkMode]);
 
   return (
-    <div className="flex min-h-screen w-full bg-gray-50 text-gray-900">
+    <div className="flex min-h-screen w-full bg-gray-50 text-gray-900 dark:bg-dark-bg dark:text-gray-100">
       <Sidebar />
       <main
-        className={`flex w-full flex-col bg-gray-50 dark:bg-dark-bg ${
+        className={`flex w-full flex-col transition-all duration-300 ${
           isSidebarCollapsed ? "" : "md:pl-64"
         }`}
       >
         <Navbar />
-        {children}
+        <div className="flex-1">{children}</div>
       </main>
     </div>
   );

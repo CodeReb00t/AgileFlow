@@ -41,37 +41,44 @@ const Timeline = () => {
     }));
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+      </div>
+    );
   if (isError || !projects)
-    return <div>An error occurred while fetching projects</div>;
+    return (
+      <div className="flex items-center justify-center py-20 text-red-500">
+        An error occurred while fetching projects
+      </div>
+    );
 
   return (
     <div className="max-w-full p-8">
       <header className="mb-4 flex items-center justify-between">
         <Header name="Projects Timeline" />
-        <div className="relative inline-block w-64">
-          <select
-            className="focus:shadow-outline block w-full appearance-none rounded border border-gray-400 bg-white px-4 py-2 pr-8 leading-tight shadow hover:border-gray-500 focus:outline-none dark:border-dark-secondary dark:bg-dark-secondary dark:text-white"
-            value={displayOptions.viewMode}
-            onChange={handleViewModeChange}
-          >
-            <option value={ViewMode.Day}>Day</option>
-            <option value={ViewMode.Week}>Week</option>
-            <option value={ViewMode.Month}>Month</option>
-          </select>
-        </div>
+        <select
+          className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-stroke-dark dark:bg-dark-secondary dark:text-white transition-colors"
+          value={displayOptions.viewMode}
+          onChange={handleViewModeChange}
+        >
+          <option value={ViewMode.Day}>Day</option>
+          <option value={ViewMode.Week}>Week</option>
+          <option value={ViewMode.Month}>Month</option>
+        </select>
       </header>
 
-      <div className="overflow-hidden rounded-md bg-white shadow dark:bg-dark-secondary dark:text-white">
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-stroke-dark dark:bg-dark-secondary dark:text-white">
         <div className="timeline">
           <Gantt
             tasks={ganttTasks}
             {...displayOptions}
             columnWidth={displayOptions.viewMode === ViewMode.Month ? 150 : 100}
             listCellWidth="100px"
-            projectBackgroundColor={isDarkMode ? "#101214" : "#1f2937"}
-            projectProgressColor={isDarkMode ? "#1f2937" : "#aeb8c2"}
-            projectProgressSelectedColor={isDarkMode ? "#000" : "#9ba1a6"}
+            projectBackgroundColor={isDarkMode ? "#3b82f6" : "#1f2937"}
+            projectProgressColor={isDarkMode ? "#2563eb" : "#6b7280"}
+            projectProgressSelectedColor={isDarkMode ? "#1d4ed8" : "#374151"}
           />
         </div>
       </div>

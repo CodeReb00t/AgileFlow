@@ -25,15 +25,55 @@ import {
   YAxis,
 } from "recharts";
 import { dataGridClassNames, dataGridSxStyles } from "@/src/lib/utils";
+import { BarChart3, PieChart as PieChartIcon, ListChecks } from "lucide-react";
 
 const taskColumns: GridColDef[] = [
   { field: "title", headerName: "Title", width: 200 },
-  { field: "status", headerName: "Status", width: 150 },
-  { field: "priority", headerName: "Priority", width: 150 },
+  {
+    field: "status",
+    headerName: "Status",
+    width: 150,
+    renderCell: (params) => {
+      const colorMap: Record<string, string> = {
+        "To Do": "bg-gray-100 text-gray-700",
+        "Work In Progress": "bg-blue-100 text-blue-700",
+        "Under Review": "bg-amber-100 text-amber-700",
+        Completed: "bg-green-100 text-green-700",
+      };
+      return (
+        <span
+          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${colorMap[params.value] || "bg-gray-100 text-gray-700"}`}
+        >
+          {params.value}
+        </span>
+      );
+    },
+  },
+  {
+    field: "priority",
+    headerName: "Priority",
+    width: 150,
+    renderCell: (params) => {
+      const colorMap: Record<string, string> = {
+        Urgent: "bg-red-100 text-red-700",
+        High: "bg-orange-100 text-orange-700",
+        Medium: "bg-yellow-100 text-yellow-700",
+        Low: "bg-green-100 text-green-700",
+        Backlog: "bg-gray-100 text-gray-600",
+      };
+      return (
+        <span
+          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${colorMap[params.value] || "bg-gray-100 text-gray-700"}`}
+        >
+          {params.value}
+        </span>
+      );
+    },
+  },
   { field: "dueDate", headerName: "Due Date", width: 150 },
 ];
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
 
 const HomePage = () => {
   const {
@@ -46,8 +86,18 @@ const HomePage = () => {
 
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
-  if (tasksLoading || isProjectsLoading) return <div>Loading..</div>;
-  if (tasksError || !tasks || !projects) return <div>Error fetching data</div>;
+  if (tasksLoading || isProjectsLoading)
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+      </div>
+    );
+  if (tasksError || !tasks || !projects)
+    return (
+      <div className="flex items-center justify-center py-20 text-red-500">
+        Error fetching data
+      </div>
+    );
 
   const priorityCount = tasks.reduce(
     (acc: Record<string, number>, task: Task) => {
@@ -79,52 +129,77 @@ const HomePage = () => {
 
   const chartColors = isDarkMode
     ? {
-        bar: "#8884d8",
-        barGrid: "#303030",
+        bar: "#818cf8",
+        barGrid: "#374151",
         pieFill: "#4A90E2",
-        text: "#FFFFFF",
+        text: "#d1d5db",
       }
     : {
-        bar: "#8884d8",
-        barGrid: "#E0E0E0",
+        bar: "#6366f1",
+        barGrid: "#e5e7eb",
         pieFill: "#82ca9d",
-        text: "#000000",
+        text: "#374151",
       };
 
   return (
-    <div className="container h-full w-[100%] bg-gray-100 bg-transparent p-8">
+    <div className="h-full w-full p-8">
       <Header name="Project Management Dashboard" />
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="rounded-lg bg-white p-4 shadow dark:bg-dark-secondary">
-          <h3 className="mb-4 text-lg font-semibold dark:text-white">
-            Task Priority Distribution
-          </h3>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        {/* Bar Chart Card */}
+        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-stroke-dark dark:bg-dark-secondary">
+          <div className="mb-4 flex items-center gap-2">
+            <BarChart3 className="h-5 w-5 text-indigo-500" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Task Priority Distribution
+            </h3>
+          </div>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={taskDistribution}>
               <CartesianGrid
                 strokeDasharray="3 3"
                 stroke={chartColors.barGrid}
               />
-              <XAxis dataKey="name" stroke={chartColors.text} />
-              <YAxis stroke={chartColors.text} />
+              <XAxis dataKey="name" stroke={chartColors.text} fontSize={12} />
+              <YAxis stroke={chartColors.text} fontSize={12} />
               <Tooltip
                 contentStyle={{
-                  width: "min-content",
-                  height: "min-content",
+                  backgroundColor: isDarkMode ? "#23272e" : "#fff",
+                  border: isDarkMode
+                    ? "1px solid #374151"
+                    : "1px solid #e5e7eb",
+                  borderRadius: "8px",
+                  color: isDarkMode ? "#fff" : "#000",
                 }}
               />
               <Legend />
-              <Bar dataKey="count" fill={chartColors.bar} />
+              <Bar
+                dataKey="count"
+                fill={chartColors.bar}
+                radius={[6, 6, 0, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div className="rounded-lg bg-white p-4 shadow dark:bg-dark-secondary">
-          <h3 className="mb-4 text-lg font-semibold dark:text-white">
-            Project Status
-          </h3>
+
+        {/* Pie Chart Card */}
+        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-stroke-dark dark:bg-dark-secondary">
+          <div className="mb-4 flex items-center gap-2">
+            <PieChartIcon className="h-5 w-5 text-emerald-500" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Project Status
+            </h3>
+          </div>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
-              <Pie dataKey="count" data={projectStatus} fill="#82ca9d" label>
+              <Pie
+                dataKey="count"
+                data={projectStatus}
+                fill="#82ca9d"
+                label
+                innerRadius={60}
+                outerRadius={100}
+                paddingAngle={5}
+              >
                 {projectStatus.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
@@ -132,15 +207,29 @@ const HomePage = () => {
                   />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: isDarkMode ? "#23272e" : "#fff",
+                  border: isDarkMode
+                    ? "1px solid #374151"
+                    : "1px solid #e5e7eb",
+                  borderRadius: "8px",
+                  color: isDarkMode ? "#fff" : "#000",
+                }}
+              />
               <Legend />
             </PieChart>
           </ResponsiveContainer>
         </div>
-        <div className="rounded-lg bg-white p-4 shadow dark:bg-dark-secondary md:col-span-2">
-          <h3 className="mb-4 text-lg font-semibold dark:text-white">
-            Your Tasks
-          </h3>
+
+        {/* Tasks Table */}
+        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-stroke-dark dark:bg-dark-secondary md:col-span-2">
+          <div className="mb-4 flex items-center gap-2">
+            <ListChecks className="h-5 w-5 text-blue-500" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Your Tasks
+            </h3>
+          </div>
           <div style={{ height: 400, width: "100%" }}>
             <DataGrid
               rows={tasks}

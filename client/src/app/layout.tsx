@@ -5,7 +5,7 @@ import DashboardWrapper from "@/src/app/dashboardWrapper";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Shedly",
+  title: "AgileFlow – Project Management",
   description: "Manage And Track Your Projects And Tasks Very Efficiently",
 };
 
@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>
+      <body className="antialiased">
         <DashboardWrapper>{children}</DashboardWrapper>
       </body>
     </html>

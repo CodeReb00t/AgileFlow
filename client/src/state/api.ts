@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
 export interface Project {
   id: number;
   name: string;
@@ -6,6 +7,7 @@ export interface Project {
   startDate?: string;
   endDate?: string;
 }
+
 export interface User {
   userId?: number;
   username: string;
@@ -13,6 +15,7 @@ export interface User {
   profilePictureUrl?: string;
   teamId?: number;
 }
+
 export interface Attachment {
   id: number;
   fileURL: string;
@@ -20,6 +23,7 @@ export interface Attachment {
   taskId: number;
   uploadedById: number;
 }
+
 export enum Priority {
   Urgent = "Urgent",
   High = "High",
@@ -27,12 +31,14 @@ export enum Priority {
   Low = "Low",
   Backlog = "Backlog",
 }
+
 export enum Status {
   ToDo = "To Do",
   WorkInProgress = "Work In Progress",
   UnderReview = "Under Review",
   Completed = "Completed",
 }
+
 export interface Task {
   id: number;
   title: string;
@@ -65,6 +71,7 @@ export interface Team {
   productOwnerUserId?: number;
   projectManagerUserId?: number;
 }
+
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -72,6 +79,7 @@ export const api = createApi({
   reducerPath: "api",
   tagTypes: ["Projects", "Tasks", "Users", "Teams"],
   endpoints: (build) => ({
+    // ── Projects ──
     getProjects: build.query<Project[], void>({
       query: () => "projects",
       providesTags: ["Projects"],
@@ -84,6 +92,26 @@ export const api = createApi({
       }),
       invalidatesTags: ["Projects"],
     }),
+    updateProject: build.mutation<
+      Project,
+      { projectId: number; data: Partial<Project> }
+    >({
+      query: ({ projectId, data }) => ({
+        url: `projects/${projectId}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Projects"],
+    }),
+    deleteProject: build.mutation<void, number>({
+      query: (projectId) => ({
+        url: `projects/${projectId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Projects", "Tasks"],
+    }),
+
+    // ── Tasks ──
     getTasks: build.query<Task[], { projectId: number }>({
       query: ({ projectId }) => `tasks?projectId=${projectId}`,
       providesTags: (result) =>
@@ -106,6 +134,17 @@ export const api = createApi({
       }),
       invalidatesTags: ["Tasks"],
     }),
+    updateTask: build.mutation<Task, { taskId: number; data: Partial<Task> }>({
+      query: ({ taskId, data }) => ({
+        url: `tasks/${taskId}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: (result, error, { taskId }) => [
+        { type: "Tasks", id: taskId },
+        "Tasks",
+      ],
+    }),
     updateTaskStatus: build.mutation<Task, { taskId: number; status: string }>({
       query: ({ taskId, status }) => ({
         url: `tasks/${taskId}/status`,
@@ -116,14 +155,27 @@ export const api = createApi({
         { type: "Tasks", id: taskId },
       ],
     }),
+    deleteTask: build.mutation<void, number>({
+      query: (taskId) => ({
+        url: `tasks/${taskId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Tasks"],
+    }),
+
+    // ── Users ──
     getUsers: build.query<User[], void>({
       query: () => "users",
       providesTags: ["Users"],
     }),
+
+    // ── Teams ──
     getTeams: build.query<Team[], void>({
       query: () => "teams",
       providesTags: ["Teams"],
     }),
+
+    // ── Search ──
     search: build.query<SearchResults, string>({
       query: (query) => `search?query=${query}`,
     }),
@@ -133,11 +185,15 @@ export const api = createApi({
 export const {
   useGetProjectsQuery,
   useCreateProjectMutation,
+  useUpdateProjectMutation,
+  useDeleteProjectMutation,
   useGetTasksQuery,
+  useGetTasksByUserQuery,
   useCreateTaskMutation,
+  useUpdateTaskMutation,
   useUpdateTaskStatusMutation,
+  useDeleteTaskMutation,
   useSearchQuery,
   useGetUsersQuery,
   useGetTeamsQuery,
-  useGetTasksByUserQuery,
 } = api;

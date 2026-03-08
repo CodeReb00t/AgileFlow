@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useCreateProjectMutation } from "@/src/state/api";
 import Modal from "@/src/components/Modal";
 import { formatISO } from "date-fns";
+
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -29,55 +30,81 @@ const ModalNewProject = ({ isOpen, onClose }: Props) => {
       startDate: formattedStartDate,
       endDate: formattedEndDate,
     });
+
+    // Reset form
+    setProjectName("");
+    setDescription("");
+    setStartDate("");
+    setEndDate("");
+    onClose();
   };
 
   const isFormValid = () => {
-    return projectName && description && startDate && endDate;
+    return projectName && startDate && endDate;
   };
+
   const inputStyles =
-    "w-full rounded border border-gray-300 p-2 shadow-sm dark:border-dark-tertiary dark:bg-dark-tertiary dark:text-white dark:focus:outline-none";
+    "w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-stroke-dark dark:bg-dark-tertiary dark:text-white dark:placeholder-gray-500 transition-colors";
+
+  const labelStyles =
+    "block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5";
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} name="Create New Project">
       <form
-        className="mt-4 space-y-6"
+        className="mt-2 space-y-4"
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit();
         }}
       >
-        <input
-          type="text"
-          className={inputStyles}
-          placeholder="Project Name"
-          value={projectName}
-          onChange={(e) => setProjectName(e.target.value)}
-        />
-        <textarea
-          className={inputStyles}
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-2">
+        <div>
+          <label className={labelStyles}>Project Name *</label>
           <input
-            type="date"
+            type="text"
             className={inputStyles}
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+            placeholder="Enter project name"
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
           />
-          <input
-            type="date"
-            className={inputStyles}
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
+        </div>
+        <div>
+          <label className={labelStyles}>Description</label>
+          <textarea
+            className={`${inputStyles} min-h-[80px] resize-none`}
+            placeholder="Enter project description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label className={labelStyles}>Start Date *</label>
+            <input
+              type="date"
+              className={inputStyles}
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className={labelStyles}>End Date *</label>
+            <input
+              type="date"
+              className={inputStyles}
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </div>
         </div>
         <button
           type="submit"
-          className={`mt-4 flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:offset-2 ${!isFormValid() || isLoading ? "cursor-not-allowed opacity-50" : ""}`}
+          className={`mt-2 flex w-full justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors ${
+            !isFormValid() || isLoading ? "cursor-not-allowed opacity-50" : ""
+          }`}
           disabled={!isFormValid() || isLoading}
         >
-          {isLoading ? "Creating... " : "Create Project"}
+          {isLoading ? "Creating..." : "Create Project"}
         </button>
       </form>
     </Modal>
