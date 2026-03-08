@@ -72,12 +72,20 @@ export interface Team {
   projectManagerUserId?: number;
 }
 
+export interface Comment {
+  id: number;
+  text: string;
+  taskId: number;
+  userId: number;
+  user?: User;
+}
+
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
   }),
   reducerPath: "api",
-  tagTypes: ["Projects", "Tasks", "Users", "Teams"],
+  tagTypes: ["Projects", "Tasks", "Users", "Teams", "Comments"],
   endpoints: (build) => ({
     // ── Projects ──
     getProjects: build.query<Project[], void>({
@@ -179,6 +187,32 @@ export const api = createApi({
     search: build.query<SearchResults, string>({
       query: (query) => `search?query=${query}`,
     }),
+
+    // ── Comments ──
+    getComments: build.query<Comment[], number>({
+      query: (taskId) => `comments/${taskId}`,
+      providesTags: (result, error, taskId) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Comments" as const, id })),
+              { type: "Comments" as const, id: taskId },
+            ]
+          : [{ type: "Comments" as const, id: taskId }],
+    }),
+    createComment: build.mutation<
+      Comment,
+      { text: string; taskId: number; userId: number }
+    >({
+      query: (body) => ({
+        url: "comments",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: (result, error, { taskId }) => [
+        { type: "Comments", id: taskId },
+        "Tasks",
+      ],
+    }),
   }),
 });
 
@@ -196,4 +230,6 @@ export const {
   useSearchQuery,
   useGetUsersQuery,
   useGetTeamsQuery,
+  useGetCommentsQuery,
+  useCreateCommentMutation,
 } = api;

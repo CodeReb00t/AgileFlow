@@ -1,11 +1,16 @@
-import { useGetTasksQuery, useUpdateTaskStatusMutation, useDeleteTaskMutation } from "@/src/state/api";
-import React from "react";
+import {
+  useGetTasksQuery,
+  useUpdateTaskStatusMutation,
+  useDeleteTaskMutation,
+} from "@/src/state/api";
+import React, { useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Task as TaskType } from "@/src/state/api";
 import { MessageSquareMore, Plus, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import Image from "next/image";
+import CommentsModal from "@/src/components/CommentsModal";
 
 type BoardProps = {
   id: string;
@@ -151,6 +156,8 @@ const Task = ({ task, onDelete }: TaskProps) => {
     }),
   }));
 
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+
   const taskTagsSplit = task.tags ? task.tags.split(",") : [];
 
   const formattedStartDate = task.startDate
@@ -268,12 +275,22 @@ const Task = ({ task, onDelete }: TaskProps) => {
               />
             )}
           </div>
-          <div className="flex items-center gap-1 text-gray-400 dark:text-gray-500">
+          <div
+            className="flex items-center gap-1 text-gray-400 dark:text-gray-500 cursor-pointer hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+            onClick={() => setIsCommentsOpen(true)}
+          >
             <MessageSquareMore size={16} />
             <span className="text-xs">{numberOfComments}</span>
           </div>
         </div>
       </div>
+
+      <CommentsModal
+        isOpen={isCommentsOpen}
+        onClose={() => setIsCommentsOpen(false)}
+        taskId={task.id}
+        taskTitle={task.title}
+      />
     </div>
   );
 };
