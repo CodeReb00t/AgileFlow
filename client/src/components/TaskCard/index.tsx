@@ -34,7 +34,7 @@ function TaskCard({ task }: Props) {
       {task.attachments && task.attachments.length > 0 && (
         <div className="mb-3 -mx-4 -mt-4">
           <Image
-            src={`/images/${task.attachments[0].fileURL}`}
+            src={`/${task.attachments[0].fileURL}`}
             alt={task.attachments[0].fileName}
             width={400}
             height={200}
